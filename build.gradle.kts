@@ -24,16 +24,13 @@ kotlin {
         languageSettings.optIn("kotlinx.coroutines.ExperimentalCoroutinesApi")
     }
 
-    val commonMain by sourceSets.getting
-    val commonTest by sourceSets.getting
-
-    commonMain.dependencies {
-        implementation("com.squareup.okio:okio:3.2.0")
+    sourceSets.commonMain.get().dependencies {
+        implementation("com.squareup.okio:okio:3.3.0")
         implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
     }
 
-    commonTest.dependencies {
-        implementation("com.squareup.okio:okio-fakefilesystem:3.2.0")
+    sourceSets.commonTest.get().dependencies {
+        implementation("com.squareup.okio:okio-fakefilesystem:3.3.0")
         implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
         implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
     }
