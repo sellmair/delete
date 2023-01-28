@@ -1,7 +1,10 @@
 package io.sellmair.delete
 
-import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.newFixedThreadPoolContext
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import okio.FileSystem
 import okio.Path.Companion.toPath
 

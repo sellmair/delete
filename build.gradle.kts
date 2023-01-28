@@ -56,7 +56,7 @@ tasks.register("install") {
 
     doLast {
         exec {
-            commandLine("sudo", "-S", "mv", inputFile.get().absolutePath, outputFile.absolutePath)
+            commandLine("sudo", "-S", "cp", inputFile.get().absolutePath, outputFile.absolutePath)
         }
     }
 }
