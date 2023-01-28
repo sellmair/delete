@@ -1,5 +1,7 @@
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
+import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
 import org.jetbrains.kotlin.gradle.targets.native.tasks.KotlinNativeTest
+import org.jetbrains.kotlin.konan.target.HostManager
 
 plugins {
     kotlin("multiplatform")
@@ -33,5 +35,28 @@ kotlin {
         implementation("com.squareup.okio:okio-fakefilesystem:3.3.0")
         implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
         implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
+    }
+}
+
+tasks.register("install") {
+    /* Only supports Mac hosts right now */
+    if (!HostManager.hostIsMac) error("install task only supports macos hosts")
+
+    val kotlinTargetForHost = kotlin.targets.withType<KotlinNativeTarget>()
+        .find { it.konanTarget == HostManager.host } ?: error("Unsupported host: ${HostManager.host}")
+
+    val executable = kotlinTargetForHost.binaries.getExecutable(NativeBuildType.RELEASE)
+    val inputFile = executable.linkTaskProvider.flatMap { it.outputFile }
+
+    dependsOn(executable.linkTaskProvider)
+    inputs.file(inputFile)
+
+    val outputFile = File("/usr/local/bin/del")
+    outputs.file(outputFile)
+
+    doLast {
+        exec {
+            commandLine("sudo", "-S", "mv", inputFile.get().absolutePath, outputFile.absolutePath)
+        }
     }
 }
